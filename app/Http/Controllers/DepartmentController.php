@@ -9,7 +9,8 @@ class DepartmentController extends Controller
 {
     public function index()
     {
-        return Department::all();
+        $departments = Department::all();
+        return response()->json($departments);
     }
 
     public function store(Request $request)
@@ -25,18 +26,21 @@ class DepartmentController extends Controller
         return response()->json($department, 201);
     }
 
-    public function show(Department $department)
+    public function show($id)
     {
-        return $department;
+        $department = Department::find($id);
+        return response()->json($department);
     }
 
-    public function update(Request $request, Department $department)
+    public function update(Request $request, $id)
     {
+        $department = Department::find($id);
         $validatedData = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'college_id' => 'sometimes|required|exists:colleges,college_id',
             'chairperson_id' => 'sometimes|required|exists:chairpersons,chairperson_id',
         ]);
+
 
         $department->update($validatedData);
 

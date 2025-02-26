@@ -4,12 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\Representative;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class RepresentativeController extends Controller
 {
     public function index()
     {
-        return Representative::all();
+        $representatives = Representative::all();
+        return response()->json($representatives);
+    }
+
+    public function updateMyPassword(Request $request)
+    {
+
+        $chairperson = Representative::where('representative_id','=', auth()->user()->representative_id)->first();
+        $validatedData = $request->validate([
+            'username' => 'sometimes|required|string|max:255',
+            'password' => 'sometimes|required|string|min:8',
+            'email' => 'sometimes'
+        ]);
+    
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+        }
+    
+        $chairperson->update($validatedData);
+    
+        return response()->json($chairperson, 200);
     }
 
     public function store(Request $request)

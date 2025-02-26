@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class College extends Authenticatable
+class College extends Model
 {
-    use HasApiTokens, Notifiable;
+    protected $primaryKey = 'college_id';
+    protected $table = 'colleges';
+    protected $fillable = ['name','dean_id'];
     //
 }
